@@ -1,0 +1,100 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="author" content="raf">
+<meta name="modified" content="Tue Nov 29 23:58:36 EST 2005">
+<meta name="description" content="minimail - cut+paste perl code to parse/create mbox files and mail messages">
+<meta name="keywords" content="mail, email, e-mail, parser, filter, winmail.dat, tnef">
+<title>
+minimail
+</title>
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#0000cc" vlink="#6666cc" alink="#cc0000">
+<div align="center">
+<h1><a href="http://raf.org/minimail/">minimail</a></h1>
+<font size="+1">
+Cut+paste perl code to parse/create mbox files and mail messages
+</font>
+</div>
+<br>
+<hr>
+<div align="center">
+<a href="#what_is_minimail">What is minimail?</a>
+| <a href="#supported_platforms">Supported Platforms</a>
+| <a href="#documentation">Documentation</a>
+| <a href="#download">Download</a>
+</div>
+<hr>
+<h2><a name="what_is_minimail">What is minimail?</a></h2>
+<p>
+<em>Minimail</em> is a collection of functions that parse and produce
+mailbox files and individual mail messages. It is not a module (although
+uncommenting one line and calling it <code>minimail.pm</code> would turn it
+into a module). It is intended to be compact enough to cut and paste
+directly into perl scripts that don't want to require non-standard perl
+modules. In other words, it is intended to be yet another alternative to
+<em>MIME-tools</em>. <em>MIME-tools</em> does things that this code doesn't
+(such as uuencode decoding). And <em>minimail</em> does things that
+<em>MIME-tools</em> doesn't such as reading and writing mailbox files
+correctly (repairing incorrectly formatted ones along the way),
+automatically encoding and decoding mail headers and MIME header parameters,
+and transparently unravelling <code>winmail.dat</code> attachments (aka
+<em>MS-TNEF</em>). <em>Minimail</em> is much smaller (about 3% of the size
+of <em>MIME-tools</em> and the other modules it requires and about 20% of
+the size of <em>MIME-Lite</em>) and so takes much less time during program
+startup.
+</p>
+<p>
+<em>Minimail</em> is freely available under the
+<a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.
+</p>
+<p>
+For more information read the manual entry in the
+<a href="#documentation">Documentation</a> section.
+</p>
+<h2><a name="supported_platforms">Supported Platforms</a></h2>
+<p>
+<em>Minimail</em> is written in perl and requires no non-standard modules.
+It should run on any system with a recent version of <em>perl</em>.
+</p>
+<h2><a name="documentation">Documentation</a></h2>
+<p>
+There is a manpage.
+</p>
+<table>
+	<tr valign="top">
+		<td align="right"><a href="http://raf.org/minimail/minimail.3.html"><code>minimail(3)</code></a></td>
+		<td>-</td>
+		<td>the minimail(3) manpage</td>
+	</tr>
+</table>
+<h2><a name="download">Download</a></h2>
+<p>
+Note: There is no tarball. The download is the script itself. Just download
+it and cut and paste what you need into your code.
+</p>
+<table>
+	<tr valign="top">
+		<td align="left">
+			<a href="http://raf.org/minimail/minimail"><code>minimail [46153 bytes, 2005/11/29]</code></a>
+		</td>
+		<td align="left">
+			(<code>MD5 19cbfea9796502e9eb2f9b940bc13521</code>)
+		</td>
+	</tr>
+</table>
+<hr>
+<div align="center">
+<a href="#what_is_minimail">What is minimail?</a>
+| <a href="#supported_platforms">Supported Platforms</a>
+| <a href="#documentation">Documentation</a>
+| <a href="#download">Download</a>
+</div>
+<hr>
+Last modified by raf at
+Tue Nov 29 23:58:36 EST 2005
+<div align="right">
+<a href="http://validator.w3.org/check?url=http://raf.org/minimail/">v</a>
+</div>
+</body>
+</html>
