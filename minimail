@@ -3,7 +3,7 @@ use strict;
 
 # minimail - cut+paste perl code to parse/create mbox files and mail messages
 #
-# Copyright (C) 2005 raf <raf@raf.org>
+# Copyright (C) 2005-2007 raf <raf@raf.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@ use strict;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # or visit http://www.gnu.org/copyleft/gpl.html
-
-# 20051129 raf@raf.org
+#
+# 20070803 raf@raf.org
 
 =head1 NAME
 
@@ -323,13 +323,14 @@ C<http://www.qmail.org/man/man5/mbox.html>.
 
 =head1 AUTHOR
 
-20051129 raf <raf@raf.org>
+20070803 raf <raf@raf.org>
 
 =cut
 
+# Uncomment the next line to convert minimail into a Perl module.
 # package minimail; use Exporter; use vars qw($VERSION @ISA @EXPORT); $VERSION = 1.0; @ISA = 'Exporter'; @EXPORT = qw(formail mail2str mail2multipart mail2singlepart mail2mbox insert_header append_header replace_header delete_header insert_part append_part replace_part delete_part header headers header_names param mimetype encoding filename body message parts newparam newmail);
 
-sub formail # rfc2822 + mboxrd format (see www.qmail.org/man/man5/mbox.html)
+sub formail # rfc2822 + mboxrd format (see http://www.qmail.org/man/man5/mbox.html)
 {
 	sub mime # rfc2045, rfc2046
 	{
@@ -355,12 +356,10 @@ sub formail # rfc2822 + mboxrd format (see www.qmail.org/man/man5/mbox.html)
 		{
 			if (/^--\Q$mail->{mime_boundary}\E(--)?/)
 			{
-				$text = substr($text, 0, -1) if substr($text, -1) eq "\n";
-
 				if ($state eq 'preamble')
 				{
-					$mail->{mime_preamble} = $text if length $text;
 					$state = 'part';
+					$mail->{mime_preamble} = $text if length $text;
 				}
 				elsif ($state eq 'part')
 				{
@@ -440,11 +439,11 @@ sub mail2str
 	$head .= join '', @{$mail->{headers}} if exists $mail->{headers};
 	my $body = '';
 	$body .= $mail->{body} if exists $mail->{body};
-	$body .= "$mail->{mime_preamble}\n" if exists $mail->{mime_preamble};
+	$body .= "$mail->{mime_preamble}" if exists $mail->{mime_preamble};
 	$body .= "--$mail->{mime_boundary}\n" if exists $mail->{mime_boundary} && !exists $mail->{mime_parts};
-	$body .= join "\n", map { "--$mail->{mime_boundary}\n" . mail2str($_) } @{$mail->{mime_parts}} if exists $mail->{mime_parts};
-	$body .= "\n--$mail->{mime_boundary}--" if exists $mail->{mime_boundary};
-	$body .= "\n$mail->{mime_epilogue}" if exists $mail->{mime_epilogue};
+	$body .= join("", map { "--$mail->{mime_boundary}\n" . mail2str($_) } @{$mail->{mime_parts}}) if exists $mail->{mime_parts};
+	$body .= "--$mail->{mime_boundary}--\n" if exists $mail->{mime_boundary};
+	$body .= "$mail->{mime_epilogue}" if exists $mail->{mime_epilogue};
 	$body .= mail2str($mail->{mime_message}) if exists $mail->{mime_message};
 	$body =~ s/^(>*From )/>$1/mg, $body =~ s/([^\n])\n?\z/$1\n\n/ if exists $mail->{mbox};
 	return $head . "\n" . $body;
@@ -724,13 +723,13 @@ sub newmail # rfc2822, rfc2045, rfc2046, rfc2183 (also rfc3282, rfc3066, rfc2424
 sub decode
 {
 	my ($d, $e) = @_;
-	return $e =~ /^base64$/i ? decode_base64($d) : $e =~ /^quoted-printable$/i ? decode_quoted_printable($d) : $d;
+	return $e =~ /^base64$/i ? decode_base64($d) : $e =~ /^quoted-printable$/i ? decode_quoted_printable($d) : substr($d, 0, -1);
 }
 
 sub encode
 {
 	my ($d, $e) = @_;
-	return $e =~ /^base64$/i ? encode_base64($d) : $e =~ /^quoted-printable$/i ? encode_quoted_printable($d) : $d;
+	return $e =~ /^base64$/i ? encode_base64($d) : $e =~ /^quoted-printable$/i ? encode_quoted_printable($d) : $d . "\n";
 }
 
 sub choose_encoding # rfc2822, rfc2045
@@ -867,6 +866,7 @@ sub winmail
 		my $type = unpack 'C', substr $data, $pos, 1;
 		return 0 unless defined $type && $type == ATTACHMENT; ++$pos;
 		my $id = unpack 'V', substr $data, $pos, 4; $pos += 4;
+		++$badtnef if $id == ATTACH_RENDDATA && @attachment && !exists $attachment->{body};
 		push @attachment, $attachment = {} if $id == ATTACH_RENDDATA;
 		my $len = unpack 'V', substr $data, $pos, 4; $pos += 4;
 		++$badtnef, return 0 if $pos + $len > length $data;
@@ -903,6 +903,7 @@ sub winmail
 	read_attribute_message_class();
 	do {} while read_message_attribute();
 	do {} while read_attachment_attribute();
+	++$badtnef if @attachment && !exists $attachment->{body};
 	return ($badtnef) ? $m : map { newmail(%$_) } @attachment;
 }
 
