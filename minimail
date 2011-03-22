@@ -382,6 +382,8 @@ sub formail # rfc2822 + mboxrd format (see http://www.qmail.org/man/man5/mbox.ht
 	{
 		my ($mail, $parent) = @_;
 		my @lines = split /(?<=\n)/, $mail;
+		# Needed to cope (badly) when message/rfc822 attachments incorrectly start with /^From / (thanks libpst)
+		@lines = ('') unless @lines;
 		formail(sub { shift @lines }, sub { $mail = shift }, $parent);
 		return $mail;
 	}
