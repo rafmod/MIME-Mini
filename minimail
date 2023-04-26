@@ -1,4 +1,6 @@
 #!/usr/bin/perl -w
+use 5.006;
+use warnings;
 use strict;
 
 # minimail - cut+paste perl code to parse/create mbox files and mail messages
@@ -326,6 +328,8 @@ C<http://www.qmail.org/man/man5/mbox.html>.
 20070803 raf <raf@raf.org>
 
 =cut
+
+# --- Copy and paste starting here --------------------------------------
 
 # Uncomment the next line to convert minimail into a Perl module.
 # package minimail; use Exporter; use vars qw($VERSION @ISA @EXPORT); $VERSION = 1.0; @ISA = 'Exporter'; @EXPORT = qw(formail mail2str mail2multipart mail2singlepart mail2mbox insert_header append_header replace_header delete_header insert_part append_part replace_part delete_part header headers header_names param mimetype encoding filename body message parts newparam newmail);
@@ -945,7 +949,10 @@ sub winmail
 	return ($badtnef) ? $m : map { newmail(%{$_}) } @attachment;
 }
 
-#ifdef TEST
+# Uncomment the next line to convert minimail into a Perl module.
+# 1;
+
+# --- Copy and paste until here -----------------------------------------
 
 my $test = $ARGV[0] || '';
 
@@ -1132,6 +1139,5 @@ if ($test eq 'newmail')
 	exit;
 }
 
-#endif
-
+# vim:set fenc=latin1:
 # vi:set ts=4 sw=4:
