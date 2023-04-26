@@ -316,7 +316,7 @@ automatically decode character sets that you don't want it to.
 
 rfc2822, rfc2045, rfc2046, rfc2047, rfc2231, rfc2183 (also rfc3282, rfc3066,
 rfc2424, rfc2557, rfc2110, rfc3297, rfc2912, rfc2533, rfc1864, rfc2387,
-rfc2912, rfc2533, rfc2387, rfc2076, rfc4012).
+rfc2912, rfc2533, rfc2387, rfc2076).
 
 The mailbox format used is the mboxrd format described in
 C<http://www.qmail.org/man/man5/mbox.html>.
