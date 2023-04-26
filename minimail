@@ -929,8 +929,8 @@ sub winmail
 		return $name;
 	}
 
-	add_mimetypes();
 	my $m = shift;
+	add_mimetypes();
 	$pos = 0; $data = body($m); @attachment = (); $badtnef = 0;
 	my $signature = unpack 'V', substr($data, $pos, 4); $pos += 4;
 	return $m unless $signature == 0x223E9F78;
