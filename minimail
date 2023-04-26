@@ -853,7 +853,7 @@ sub tnef2mime
 {
 	my $m = shift;
 	return $m unless exists $m->{mime_type} && $m->{mime_type} =~ /^multipart\//i && exists $m->{mime_parts};
-	add_mimetypes() unless exists $mimetype{other};
+	add_mimetypes();
 	@{$m->{mime_parts}} = grep { defined $_ } map { (mimetype($_) =~ /^application\/ms-tnef/i && filename($_) =~ /winmail\.dat$/i) ? winmail($_) : $_ } @{$m->{mime_parts}};
 	return $m;
 }
