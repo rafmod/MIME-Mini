@@ -675,7 +675,7 @@ sub message
 sub parts
 {
 	my ($m, $p) = @_;
-	return [@{$m->{mime_parts}}] unless defined $p;
+	return exists $m->{mime_parts} ? [@{$m->{mime_parts}}] : [] unless defined $p;
 	$m->{mime_parts} = [@{$p}];
 }
 
