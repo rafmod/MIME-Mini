@@ -598,7 +598,7 @@ sub header_display # rfc2047, rfc2231
 	return join '',
 		map { tr/ \t/ /s; $_ } # finally, squeeze multiple whitespace
 		map { tr/\x00-\x08\x0b-\x1f\x7f//d; $_ } # strip control characters
-		map { s/$encword/lc $2 eq 'q' ? join ' ', split '_', decode_quoted_printable($3), -1 : decode_base64($3)/ieg; $_ } # decode encoded words
+		map { s/$encword/lc $2 eq 'q' ? decode_quoted_printable($3, 1) : decode_base64($3)/ieg; $_ } # decode encoded words
 		map { s/($encword)\s+($encword)/$1$5/g while /$encword\s+$encword/; $_ } # strip space between encoded words that we're about to decode
 		map { s/\((?:\\[^\r\n]|[^\\()])*\)//g unless /^".*"$/; $_ } # strip (comments) outside "quoted strings"
 		split /("(?:\\[^\r\n]|[^\\"])*")/, shift; # split on "quoted strings"
@@ -608,7 +608,7 @@ sub header_format # rfc2822, rfc2047
 {
 	my ($h, $l, $c) = @_;
 	$h =~ s/^\s+//, $h =~ s/\s+$//, $h =~ tr/ \t\n\r/ /s;
-	$h = join ' ', map { /^".*"$/ ? $_ : !tr/\x80-\xff// ? $_ : tr/a-zA-Z0-9!*\/+-//c > length >> 1 ? join(' ', map { '=?' . ($c || 'iso-8859-1') . ($l ? "*$l" : '') . '?b?' . substr(encode_base64($_), 0, -1) . '?=' } (split /\n/, (s/([^\r\n]{38})/$1\n/g, $_))) : join(' ', map { '=?' . ($c || 'iso-8859-1') . ($l ? "*$l" : '') . '?q?' . substr(encode_quoted_printable($_), 0, -1) . '?=' } (split /\n/, (s/([^\r\n]{17})/$1\n/g, $_))) } map { /^[^\s"]*".*"[^\s"]*$/ ? $_ : split / / } split /(\S*"(?:\\[^\r\n]|[^\\"])*"\S*)/, $h;
+	$h = join ' ', map { /^".*"$/ ? $_ : !tr/\x80-\xff// ? $_ : tr/a-zA-Z0-9!*\/+-//c > length >> 1 ? join(' ', map { '=?' . ($c || 'iso-8859-1') . ($l ? "*$l" : '') . '?b?' . substr(encode_base64($_), 0, -1) . '?=' } (split /\n/, (s/([^\r\n]{38})/$1\n/g, $_))) : join(' ', map { '=?' . ($c || 'iso-8859-1') . ($l ? "*$l" : '') . '?q?' . substr(encode_quoted_printable($_, 1), 0, -1) . '?=' } (split /\n/, (s/([^\r\n]{17})/$1\n/g, $_))) } map { /^[^\s"]*".*"[^\s"]*$/ ? $_ : split / / } split /(\S*"(?:\\[^\r\n]|[^\\"])*"\S*)/, $h;
 	my ($f, $p, $lf) = ('', 0); $lf = length $f, $f .= ($lf && $lf + ($lf ? 1 : 0) + length($_) - $p > 78) ? ($p = $lf, "\n") : '', $f .= $f ? ' ' : '', $f .= $_ for map { /^\S*".*"\S*$/ ? $_ : grep { length } split / / } split /(\S*"(?:\\[^\r\n]|[^\\"\r\n])*"\S*)/, $h; # fold
 	return $f . "\n";
 }
@@ -783,8 +783,10 @@ sub decode_base64 # MIME::Base64 (Gisle Aas)
 sub encode_quoted_printable
 {
 	my $quoted = shift;
+	my $qcode = shift;
 	my $binary = ($quoted =~ tr/\x00-\x06\x0e-\x1f\x7f//) ? '' : '\r\n';
 	$quoted =~ s/([^!-<>-~ \t$binary])/sprintf '=%02X', ord $1/eg;
+	$quoted =~ s/([?_])/sprintf '=%02X', ord $1/eg if $qcode;
 	$quoted =~ s/((?:[^\r\n]{73,75})(?=[=])|(?:[^\r\n]{75}(?=[ \t]))|(?:[^\r\n]{75})(?=[^\r\n]{2})|(?:[^\r\n]{75})(?=[^\r\n]$))/$1=\n/g;
 	$quoted =~ s/([ \t])$/sprintf '=%02X', ord $1/emg;
 	# Python and mutt both behave as though this is wrong
@@ -796,8 +798,10 @@ sub encode_quoted_printable
 sub decode_quoted_printable
 {
 	my $quoted = shift;
-	$quoted =~ tr/\x00-\x08\x0b-\x0c\x0e-\x19\x7f-\xff//d;
+	my $qcode = shift;
+	$quoted =~ tr/\x00-\x08\x0b-\x0c\x0e-\x1f\x7f-\xff//d;
 	$quoted =~ s/=\n//g;
+	$quoted =~ s/_/ /g if $qcode;
 	$quoted =~ s/=([0-9A-Fa-f]{2})/chr hex $1/eg;
 	return $quoted;
 }
@@ -1077,11 +1081,13 @@ if ($test eq 'newheader')
 	append_header($m, 'Header2: text with lööööööööööööööööööööööööööööts of non-ascii chars for b64');
 	append_header($m, 'Header3: text with a loooooooooooooooooooooooooooöooooooooooooooooooooooong word with 1 non-ascii char for split qp');
 	append_header($m, 'Header4: text with a löööööööööööööööööööööööööööööööööööööööööööööööööööñg word of non-ascii chars for split b64');
+	append_header($m, 'Header5: text with Q-encoding special ö?=_chars for qp');
 	print mail2str($m);
 	print 'Header1: ', header($m, 'header1'), "\n";
 	print 'Header2: ', header($m, 'header2'), "\n";
 	print 'Header3: ', header($m, 'header3'), "\n";
 	print 'Header4: ', header($m, 'header4'), "\n";
+	print 'Header5: ', header($m, 'header5'), "\n";
 	exit;
 }
 
