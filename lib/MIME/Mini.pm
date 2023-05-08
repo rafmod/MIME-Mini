@@ -5,7 +5,7 @@
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-# 20070803 raf <raf@raf.org>
+# 20230508 raf <raf@raf.org>
 
 package MIME::Mini;
 use 5.014;
