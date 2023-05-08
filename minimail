@@ -31,19 +31,20 @@ I<minimail> - cut+paste perl code to parse/create mbox files and mail messages
 =head1 DESCRIPTION
 
 I<minimail> is a collection of functions that parse and produce mailbox
-files and individual mail messages. It is not a module (although
-uncommenting one line and calling it C<minimail.pm> would turn itinto a
-module). It is intended to be compact enough to cut and paste directly into
-perl scripts that don't want to require non-standard perl modules. In other
-words, it is intended to be yet another alternative to I<MIME-tools>.
-I<MIME-tools> does things that this code doesn't (such as uuencode
-decoding). And I<minimail> does things that I<MIME-tools> doesn't such as
-reading and writing mailbox files correctly (repairing incorrectly formatted
-ones along the way), automatically encoding and decoding mail headers and
-MIME header parameters, and transparently unravelling C<winmail.dat>
-attachments (aka I<MS-TNEF>). I<minimail> is much smaller (about 3% of the
-size of I<MIME-tools> and the other modules it requires and about 20% of the
-size of I<MIME-Lite>) and so takes much less time during program startup.
+files and individual mail messages. It is not a module, although it is also
+available as the I<MIME::Mini> module on CPAN, if you prefer. It is intended
+to be compact enough to cut and paste directly into perl scripts that don't
+want to require non-standard perl modules.
+
+It is intended to be yet another alternative to I<MIME-tools>. I<MIME-tools>
+does things that this code doesn't (such as uuencode and binhex decoding).
+And I<minimail> does things that I<MIME-tools> doesn't such as reading and
+writing mailbox files correctly (repairing incorrectly formatted ones along
+the way), and transparently unravelling C<winmail.dat> attachments (aka
+I<MS-TNEF>). I<minimail> is much smaller (about 3% of the size of
+I<MIME-tools> and the other modules it requires, and about 20% of the size
+of I<MIME-Lite> (which doesn't parse)), and so takes much less time during
+program start up.
 
 =head1 FUNCTIONS
 
@@ -333,6 +334,8 @@ C<http://www.qmail.org/man/man5/mbox.html>.
 
 # Uncomment the next line to convert minimail into a Perl module.
 # package minimail; use Exporter; use vars qw($VERSION @ISA @EXPORT); $VERSION = 1.0; @ISA = 'Exporter'; @EXPORT = qw(formail mail2str mail2multipart mail2singlepart mail2mbox insert_header append_header replace_header delete_header insert_part append_part replace_part delete_part header headers header_names param mimetype encoding filename body message parts newparam newmail);
+#
+# This is also available as the MIME::Mini module on CPAN.
 
 sub formail # rfc2822 + mboxrd format (see http://www.qmail.org/man/man5/mbox.html)
 {
