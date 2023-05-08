@@ -51,10 +51,10 @@ size of I<MIME-Lite>) and so takes much less time during program startup.
 
 =item formail(sub { <> }, sub { $mail = shift })
 
-Parses a mailbox or a mail message. Calls the first argument to retrieve
-input lines and calls the second function with every mail message found.
-Terminates when the first argument returns undef or when the second function
-returns false. Quoted C<From_> lines are unquoted.
+Parses a mailbox or a mail message. Calls the first function argument to
+retrieve input lines and calls the second function argument with every mail
+message found. Terminates when the first argument returns undef or when the
+second function returns false. Quoted C<From_> lines are unquoted.
 
 =item mail2str($mail)
 
@@ -181,11 +181,11 @@ Returns the message inside the given mail message whose mimetype is
 C<message/rfc822>. Must not be called on a multipart message or a mail
 message whose mimetype is not C<message/rfc822>.
 
-=item parts($mail[, $part])
+=item parts($mail[, $parts])
 
-When no I<$part> parameter is given, returns a reference to an array of body
-parts in the given multipart message. When the I<$parts> parameter is given,
-it is a reference to an array of body parts, and it will replace the
+When no I<$parts> parameter is given, returns a reference to an array of
+body parts in the given multipart message. When the I<$parts> parameter is
+given, it is a reference to an array of body parts, and it will replace the
 existing body parts. Must not be called on a singlepart mail message.
 
 =item newparam($name, $value[, $language[, $charset]]])
