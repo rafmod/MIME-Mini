@@ -1,0 +1,34 @@
+# https://simbabque.github.io/posts/install-perl-version-depedencies-github-workflow/
+
+ ubuntu-test-job:
+    needs: build-job
+    runs-on: "ubuntu-20.04"
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-20.04]
+        perl-version:
+          - "5.8"
+          - "5.10"
+          - "5.12"
+          # ...
+          - "5.32"
+          - "5.34"
+          - "5.36"
+    name: perl ${{ matrix.perl-version }} on ${{ matrix.os }}
+    steps:
+      - name: set up perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl-version }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: build_dir
+          path: .
+      - name: install deps using cpm
+        uses: perl-actions/install-with-cpm@v1
+        with:
+          cpanfile: "cpanfile"
+          args: "--with-suggests --with-recommends --with-test"
+      - run: prove -lr t
+
