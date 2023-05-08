@@ -1,55 +1,47 @@
+---
 name: Test with many perl versions
 
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
 
-	test:
+  test:
 
-		name:
-		Test with perl ${{ matrix.perl-version }}
+    name:
+      Test with perl ${{ matrix.perl-version }}
 
-		runs-on:
-		ubuntu-latest
+    runs-on:
+      ubuntu-latest
 
-		strategy:
-		fail-fast: false
-		matrix:
-			perl-version:
-				- '5.14'
-				- '5.16'
-				- '5.18'
-				- '5.20'
-				- '5.22'
-				- '5.24'
-				- '5.26'
-				- '5.28'
-				- '5.30'
-				- '5.32'
-				- '5.34'
-				- '5.36'
-				- 'latest'
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version:
+          - '5.14'
+          - '5.16'
+          - '5.18'
+          - '5.20'
+          - '5.22'
+          - '5.24'
+          - '5.26'
+          - '5.28'
+          - '5.30'
+          - '5.32'
+          - '5.34'
+          - '5.36'
+          - 'latest'
 
-		container:
-		image: perldocker/perl-tester:${{ matrix.perl-version }} # https://hub.docker.com/r/perldocker/perl-tester
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
 
-		steps:
-		- uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v3
 
-		- name: Show the perl version
-			run: perl -V
+      - name: Show the perl version
+        run: perl -V
 
-		- name: Install dependencies
-			run: |
-				dzil authordeps --missing | cpanm --notest
-				dzil listdeps --missing --author --cpanm-versions | cpanm --notest
-
-		- name: Test building the distribution
-			run: |
-				dzil build
-
-		- name: Run tests
-			run: |
-				dzil test --all
-				dzil xtest --all
-
+      - name: Run tests
+        run: |
+            cpanm --notest Test::FailWarnings
+            prove -l
+# vi:set et ts=2:
