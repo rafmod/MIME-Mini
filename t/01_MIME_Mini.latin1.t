@@ -740,7 +740,7 @@ sub test_filter
 	close $ifh;
 	close $ofh;
 
-	is `diff -u "$gfname" "$ofname"`, '', $desc;
+	is `diff -u "$gfname" "$ofname" | grep -v 'No differences encountered'`, '', $desc;
 	unlink $ofname if -f $gfname; # Keep the outfile if there's no goodfile yet
 	use File::Copy; move $ofname, $gfname if -f $ofname; # Define it as good (first time)
 }

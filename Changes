@@ -1,4 +1,8 @@
 {{$NEXT}}
 
+    - tests - Handle 'No differences encountered' output from Solaris diff (Thanks Chris Williams)
+
+1.000 (2023-05-09)
+
     - Convert minimail to a module
 
