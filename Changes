@@ -1,6 +1,7 @@
 {{$NEXT}}
 
     - tests - Handle 'No differences encountered' output from Solaris diff (Thanks Chris Williams)
+    - tests - Handle absence of diff (and different file size) on Windows (Thanks gregor herrmann)
 
 1.000 (2023-05-09)
 
