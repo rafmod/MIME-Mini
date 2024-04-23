@@ -1,6 +1,7 @@
 {{$NEXT}}
 
     - tests - Handle rfc822 dates in other locales (Thanks Andreas J. König)
+    - ci.yml - Add explicit 5.38 perl version
 
 1.001 (2023-05-10)
 
