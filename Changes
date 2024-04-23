@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+    - tests - Handle rfc822 dates in other locales (Thanks Andreas J. König)
+
 1.001 (2023-05-10)
 
     - tests - Handle 'No differences encountered' output from Solaris diff (Thanks Chris Williams)
