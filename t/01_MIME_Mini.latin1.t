@@ -13,6 +13,9 @@ use Test::More;
 use Test::Deep;
 use Test::FailWarnings;
 
+use locale;
+setlocale(LC_TIME, 'C');
+
 plan tests => 16;
 
 sub rfc822date { strftime '%a, %d %b %Y %H:%M:%S +0000', gmtime shift }
