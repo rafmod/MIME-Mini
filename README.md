@@ -69,6 +69,6 @@ It should work on any system with any version of *perl* since v5.14.
     URL: https://metacpan.org/dist/MIME-Mini
     GIT: https://github.com/rafmod/MIME-Mini
     GIT: https://codeberg.org/rafmod/MIME-Mini
-    Date: 20230510
+    Date: 20240424
     Author: raf <raf@raf.org>
 
